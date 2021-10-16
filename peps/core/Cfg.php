@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+namespace peps\core;
+
+use Locale;
+use NumberFormatter;
+
+/**
+ * Classe 100% statique de configuration initiale de l'application.
+ * DOIT être étendue dans l'application par une classe de configuration générale elle-même étendue par une classe finale par serveur.
+ * Extension PHP 'intl' requise.
+ */
+class Cfg
+{
+	/**
+	 * Tableau associatif des constantes de configuration.
+	 * 
+	 * @var mixed[]
+	 */
+	private static array $constants = [];
+
+	/**
+	 * Constructeur privé.
+	 */
+	private function __construct()
+	{
+	}
+
+	/**
+	 * Inscrit les constantes de base.
+	 * DOIT être redéfinie dans la classe enfant pour y inscrire les constantes de l'application en invoquant parent::init() en première instruction.
+	 * Cette méthode doit restée "protected" sauf au dernier niveau d'héritage dans lequel elle DOIT être "public" pour être invoquée depuis le contrôleur frontal.
+	 * Les clés (en SNAKE_CASE) enregistrées ici sont LES SEULES accessibles aux classes PEPS.
+	 * Les clés ajoutées par l'application DEVRAIENT être en camelCase.
+	 */
+	protected static function init(): void
+	{
+		// Chemin du fichier JSON des routes depuis la racine de l'application.
+		self::register('ROUTE_FILE', 'cfg' . DIRECTORY_SEPARATOR . 'routes.json');
+
+		// Namespace des contrôleurs.
+		self::register('CONTROLLERS_NAMESPACE', 'controllers');
+
+		// Chemin du répertoire des vues depuis la racine de l'application.
+		self::register('VIEWS_DIR', 'views');
+
+		// Nom de la vue affichant l'erreur 404.
+		self::register('ERROR_404_VIEW', 'error404.php');
+
+		// Locale par défaut en cas de non détection (ex: 'fr' ou 'fr-FR').
+		self::register('LOCALE_DEFAULT', 'fr');
+
+		// Locale du client.
+		self::register('LOCALE', (function () {
+			// Récupérer les locales du client.
+			$locales = filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE', FILTER_SANITIZE_STRING);
+			return Locale::acceptFromHttp($locales) ?: self::$constants['LOCALE_DEFAULT'];
+		})());
+
+		// Instance de NumberFormatter pour formater un nombre avec 2 décimales selon la locale.
+		self::register('NF_LOCALE_2DEC', (fn () => NumberFormatter::create(self::$constants['LOCALE'], NumberFormatter::PATTERN_DECIMAL, '#,##0.00'))());
+
+		// Instance de NumberFormatter pour formater un nombre avec 2 décimales selon la norme US (sans séparateur de milliers), typiquement pour les champs INPUT de type "number" de certains navigateurs.
+		self::register('NF_INPUT_2DEC', (fn () => NumberFormatter::create('en-US', NumberFormatter::PATTERN_DECIMAL, '0.00'))());
+	}
+
+	/**
+	 * Inscrit une constante dans le tableau des constantes.
+	 */
+	protected final static function register(string $key, mixed $val = null): void
+	{
+		self::$constants[$key] = $val;
+	}
+
+	/**
+	 * Retourne la valeur de la constante à partir de sa clé.
+	 * Retourne null si clé inexistante.
+	 */
+	public final static function get(string $key): mixed
+	{
+		return self::$constants[$key] ?? null;
+	}
+}
