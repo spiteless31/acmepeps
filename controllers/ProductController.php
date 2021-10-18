@@ -73,9 +73,11 @@ final class ProductController
 		// Dans tous les cas, tenter de supprimer les images.
 		@unlink("assets/img/product_{$idProduct}_small.jpg");
 		@unlink("assets/img/product_{$idProduct}_big.jpg");
-		// Rediriger vers la liste (synchrone).
+		// SOLUTION SYNCHRONE
+		// Rediriger vers la liste.
 		//Router::redirect('/');
-		// Faire un echo sans précision (asynchrone).
-		Router::json('');
+		// SOLUTION ASYNCHRONE
+		// Faire un echo sans précision.
+		Router::json(json_encode(''));
 	}
 }
