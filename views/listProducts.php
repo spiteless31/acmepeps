@@ -40,6 +40,9 @@ use peps\core\Cfg;
 						<img class="thumbnail" src="/assets/img/product_<?= $product->idImg ?>_small.jpg" alt="<?= $product->name ?>" />
 						<div class="name"><?= $product->name ?></div>
 					</a>
+					<a class="ico update" href="/product/update/<?= $product->idProduct ?>">
+						<img src="/assets/img/ico_update.svg" />
+					</a>
 					<img src="/assets/img/ico_delete.svg" class="ico delete" onclick="deleteAll(<?= $product->idProduct ?>)" />
 					<img src="/assets/img/ico_deleteImg.svg" class="ico deleteImg" onclick="deleteImg(<?= $product->idProduct ?>)" />
 				</div>

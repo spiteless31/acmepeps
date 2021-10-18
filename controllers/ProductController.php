@@ -100,4 +100,25 @@ final class ProductController
 		// Rendre la vue.
 		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories]);
 	}
+
+	/**
+	 * Affiche le formulaire de modification d'un produit.
+	 * 
+	 * GET /product/update/{idProduct}
+	 *
+	 * @param array $params Tableau associatif des paramètres.
+	 */
+	public static function update(array $params): void
+	{
+		// Récupérer idProduct.
+		$idProduct = (int) $params['idProduct'];
+		// Créer le produit correspondant.
+		$product = new Product($idProduct);
+		// Hydrater le produit.
+		$product->hydrate();
+		// Récupérer toutes les catégories.
+		$categories = Category::findAllBy([], ['name' => 'ASC']);
+		// Rendre la vue.
+		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories]);
+	}
 }
