@@ -24,7 +24,12 @@ use peps\core\Cfg;
 		<?php
 		foreach ($categories as $category) {
 		?>
-			<div class="category"><?= $category->name ?></div>
+			<div class="category">
+				<a href="/product/create/<?= $category->idCategory ?>">
+					<img class="ico" src="/assets/img/ico_create.svg" />
+				</a>
+				<?= $category->name ?>
+			</div>
 			<?php
 			foreach ($category->products as $product) {
 				// Ajouter dynamiquement la propriété idImg.

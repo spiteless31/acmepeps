@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace views;
+
 use peps\core\Cfg;
 ?>
 <!DOCTYPE html>
@@ -14,6 +16,7 @@ use peps\core\Cfg;
 </head>
 
 <body>
+	<header></header>
 	<main>
 		<div class="category">
 			<a href="/product/list">Produits</a> &gt; Editer
@@ -23,7 +26,14 @@ use peps\core\Cfg;
 			<div class="item">
 				<label>Catégorie</label>
 				<select name="idCategory">
-					<!-- ICI PEUPLER LE MENU DEROULANT -->
+					<?php
+					foreach ($categories as $category) {
+						$selected = $category->idCategory === $product->idCategory ? 'selected="selected"' : '';
+					?>
+						<option value="<?= $category->idCategory ?>" <?= $selected ?>><?= $category->name ?></option>
+					<?php
+					}
+					?>
 				</select>
 			</div>
 			<div class="item">
@@ -36,7 +46,7 @@ use peps\core\Cfg;
 			</div>
 			<div class="item">
 				<label>Prix</label>
-				<input type="number" name="price" value="<?= $product->price ? Cfg::get('NF_INPUT_2DEC')->format($product->price) : null ?>" min="0.1" max="9999.99" step="0.01" size="7" maxlength="7" required="required" />
+				<input type="number" name="price" value="<?= $product->price ? Cfg::get('NF_INPUT_2DEC')->format($product->price) : null ?>" min="0.01" max="9999.99" step="0.01" size="7" maxlength="7" required="required" />
 			</div>
 			<div class="item">
 				<label></label>

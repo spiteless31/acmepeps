@@ -9,6 +9,7 @@ use peps\core\ORMDB;
 
 /**
  * Entité Category.
+ * Toutes les propriétés à null par défaut pour les formulaires de saisie.
  * 
  * @see DBAL
  * @see ORMDB
@@ -18,19 +19,19 @@ class Category extends ORMDB
 	/**
 	 * PK.
 	 */
-	public ?int $idCategory;
+	public ?int $idCategory = null;
 
 	/**
 	 * Nom.
 	 */
-	public ?string $name;
+	public ?string $name = null;
 
 	/**
 	 * Collection des produits de cette catégorie.
 	 * 
-	 * @var Product[]
+	 * @var Product[] | null
 	 */
-	protected ?array $products;
+	protected ?array $products = null;
 
 	/**
 	 * Constructeur.

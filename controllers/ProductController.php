@@ -68,8 +68,7 @@ final class ProductController
 		$idProduct = (int) $params['idProduct'];
 		$mode = $params['mode'];
 		// Si mode 'all', créer un produit pour le supprimer.
-		if ($mode === 'all')
-			(new Product($idProduct))->remove();
+		if ($mode === 'all') (new Product($idProduct))->remove();
 		// Dans tous les cas, tenter de supprimer les images.
 		@unlink("assets/img/product_{$idProduct}_small.jpg");
 		@unlink("assets/img/product_{$idProduct}_big.jpg");
@@ -79,5 +78,26 @@ final class ProductController
 		// SOLUTION ASYNCHRONE
 		// Faire un echo sans précision.
 		Router::json(json_encode(''));
+	}
+
+	/**
+	 * Affiche le formulaire d'ajout d'un produit.
+	 * 
+	 * GET /product/create/{idCategory}
+	 *
+	 * @param array $params Tableau associatif des paramètres.
+	 */
+	public static function create(array $params): void
+	{
+		// Récupérer idCategory.
+		$idCategory = (int) $params['idCategory'];
+		// Créer un produit (attendu par la vue).
+		$product = new Product();
+		// Renseigner l'idCategory du produit pour caler le menu déroulant des catégories.
+		$product->idCategory = $idCategory;
+		// Récupérer toutes les catégories.
+		$categories = Category::findAllBy([], ['name' => 'ASC']);
+		// Rendre la vue.
+		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories]);
 	}
 }

@@ -9,6 +9,7 @@ use peps\core\ORMDB;
 
 /**
  * Entité Product.
+ * Toutes les propriétés à null par défaut pour les formulaires de saisie.
  * 
  * @see DBAL
  * @see ORMDB
@@ -18,32 +19,32 @@ class Product extends ORMDB
 	/**
 	 * PK.
 	 */
-	public ?int $idProduct;
+	public ?int $idProduct = null;
 
 	/**
 	 * FK de la catégorie.
 	 */
-	public ?int $idCategory;
+	public ?int $idCategory = null;
 
 	/**
 	 * Nom.
 	 */
-	public ?string $name;
+	public ?string $name = null;
 
 	/**
 	 * Référence.
 	 */
-	public ?string $ref;
+	public ?string $ref = null;
 
 	/**
 	 * Prix.
 	 */
-	public ?float $price;
+	public ?float $price = null;
 
 	/**
 	 * Catégorie de ce produit.
 	 */
-	protected ?Category $category;
+	protected ?Category $category = null;
 
 	/**
 	 * Constructeur.
