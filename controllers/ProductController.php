@@ -115,7 +115,8 @@ final class ProductController
 		// Créer le produit correspondant.
 		$product = new Product($idProduct);
 		// Hydrater le produit.
-		$product->hydrate();
+		if (!$product->hydrate())
+			Router::render('noProduct.php');
 		// Récupérer toutes les catégories.
 		$categories = Category::findAllBy([], ['name' => 'ASC']);
 		// Rendre la vue.
