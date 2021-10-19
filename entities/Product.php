@@ -17,6 +17,14 @@ use peps\core\Validator;
  */
 class Product extends ORMDB implements Validator
 {
+	// Messages d'erreur.
+	protected const ERR_INVALID_PK = "Clé primaire invalide";
+	protected const ERR_INVALID_CATEGORY = "Catégorie invalide";
+	protected const ERR_INVALID_NAME = "Nom invalide";
+	protected const ERR_INVALID_REF = "Référence invalide";
+	protected const ERR_REF_ALREADY_EXISTS = "Référence déjà existante";
+	protected const ERR_INVALID_PRICE = "Prix invalide";
+
 	/**
 	 * PK.
 	 */
@@ -81,32 +89,32 @@ class Product extends ORMDB implements Validator
 		// Si présent, vérifier idProduct (PK) et son existence en DB.
 		if ($this->idProduct && ($this->idProduct < 1 || !(new Product($this->idProduct))->hydrate())) {
 			$valid = false;
-			$errors[] = "Clé primaire invalide";
+			$errors[] = self::ERR_INVALID_PK;
 		}
 		// Vérifier idCategory (PK, obligatoire) et son existence en DB.
 		if (!$this->idCategory || $this->idCategory < 1 || !(new Category($this->idCategory))->hydrate()) {
 			$valid = false;
-			$errors[] = "Catégorie invalide";
+			$errors[] = self::ERR_INVALID_CATEGORY;
 		}
 		// Vérifier le nom (obligatoire et max 50 caractères).
 		if (!$this->name || mb_strlen($this->name) > 50) {
 			$valid = false;
-			$errors[] = "Nom invalide";
+			$errors[] = self::ERR_INVALID_NAME;
 		}
 		// Vérifier la référence (obligatoire et max 10 caractères).
-		if (!$this->ref || mb_strlen($this->name) > 10) {
+		if (!$this->ref || mb_strlen($this->ref) > 10) {
 			$valid = false;
-			$errors[] = "Référence invalide";
+			$errors[] = self::ERR_INVALID_REF;
 		}
 		// Vérifier l'unicité de la référence en DB.
 		if ($this->refAlreadyExists()) {
 			$valid = false;
-			$errors[] = "Référence déjà existante";
+			$errors[] = self::ERR_REF_ALREADY_EXISTS;
 		}
 		// Vérifier le prix (obligatoire et > 0 et < 10000).
 		if (!$this->price || $this->price <= 0 || $this->price >= 10000) {
 			$valid = false;
-			$errors[] = "Prix invalide";
+			$errors[] = self::ERR_INVALID_PRICE;
 		}
 		return $valid;
 	}
@@ -121,6 +129,6 @@ class Product extends ORMDB implements Validator
 		// Rechercher un éventuel doublon.
 		$product = self::findOneBy(['ref' => $this->ref]);
 		// Ne pas compter celui qui aurait le même idProduct.
-		return (bool) $this->idProduct != $product->idProduct;
+		return (bool) $product && $this->idProduct != $product->idProduct;
 	}
 }

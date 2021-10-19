@@ -61,5 +61,10 @@
 			"idProduct",
 			"mode"
 		]
+	},
+	{
+		"verb": "GET",
+		"uri": "/test",
+		"method": "TestController.test"
 	}
 ]

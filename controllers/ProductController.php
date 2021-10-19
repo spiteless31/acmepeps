@@ -122,4 +122,31 @@ final class ProductController
 		// Rendre la vue.
 		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories]);
 	}
+
+	/**
+	 * Persiste le produit en ajout ou modification.
+	 * 
+	 * POST /product/save
+	 */
+	public static function save(): void
+	{
+		// Initialiser le tableau des erreurs.
+		$errors = [];
+		// Créer le produit.
+		$product = new Product();
+		// Récupérer et filtrer les donnéees POST.
+		$product->idProduct = filter_input(INPUT_POST, 'idProduct', FILTER_VALIDATE_INT) ?: null;
+		$product->idCategory = filter_input(INPUT_POST, 'idCategory', FILTER_VALIDATE_INT) ?: null;
+		$product->name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?: null;
+		$product->ref = filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_STRING) ?: null;
+		$product->price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT) ?: null;
+		// Si données valides, persister le produit et rediriger vers la liste.
+		if ($product->validate($errors)) {
+			$product->persist();
+			Router::redirect('/');
+		}
+		// Sinon, retrouver toutes les catégories et rendre la vue editProduct.
+		$categories = Category::findAllBy([], ['name' => 'ASC']);
+		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories, 'errors' => $errors]);
+	}
 }

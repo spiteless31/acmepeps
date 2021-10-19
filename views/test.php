@@ -23,31 +23,22 @@ use peps\core\Cfg;
 		</div>
 		<div class="error"><?= implode('<br/>', $errors ?? []) ?></div>
 		<form name="form1" action="/product/save" method="POST">
-			<input type="hidden" name="idProduct" value="<?= $product->idProduct ?>" />
+			<input name="idProduct" value="" />
 			<div class="item">
 				<label>Catégorie</label>
-				<select name="idCategory">
-					<?php
-					foreach ($categories as $category) {
-						$selected = $category->idCategory === $product->idCategory ? 'selected="selected"' : '';
-					?>
-						<option value="<?= $category->idCategory ?>" <?= $selected ?>><?= $category->name ?></option>
-					<?php
-					}
-					?>
-				</select>
+				<input name="idCategory" value="">
 			</div>
 			<div class="item">
 				<label>Nom</label>
-				<input name="name" value="<?= $product->name ?>" size="20" maxlength="50" required="required" />
+				<input name="name" value="" />
 			</div>
 			<div class="item">
 				<label>Référence</label>
-				<input name="ref" value="<?= $product->ref ?>" size="10" maxlength="10" required="required" />
+				<input name="ref" value="" />
 			</div>
 			<div class="item">
 				<label>Prix</label>
-				<input type="number" name="price" value="<?= $product->price ? Cfg::get('NF_INPUT_2DEC')->format($product->price) : null ?>" min="0.01" max="9999.99" step="0.01" size="7" maxlength="7" required="required" />
+				<input name="price" value="" />
 			</div>
 			<div class="item">
 				<label></label>

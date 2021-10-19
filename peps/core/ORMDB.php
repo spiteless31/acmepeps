@@ -71,7 +71,7 @@ class ORMDB implements ORM
 		$strUpdate = rtrim($strUpdate, ',');
 		// Finir de compléter les requêtes.
 		$strInsert .= ')';
-		$strUpdate .=  "WHERE {$pkName} = :__ID__";
+		$strUpdate .=  " WHERE {$pkName} = :__ID__";
 		// Finir de compléter les tableaux de paramètres.
 		$paramsInsert = $paramsUpdate = $params;
 		$paramsUpdate[':__ID__'] = $this->$pkName;
