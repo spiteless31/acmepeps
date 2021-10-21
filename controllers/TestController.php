@@ -7,6 +7,7 @@ namespace controllers;
 use entities\Category;
 use entities\Product;
 use peps\core\Router;
+use stdClass;
 
 /**
  * Classe 100% statique.
@@ -28,6 +29,9 @@ final class TestController
 	 */
 	public static function test(): void
 	{
-		Router::render('test.php');
+		session_start();
+		$_SESSION['obj'] = $_SESSION['obj'] ?? new stdClass();
+		$_SESSION['obj']->k = isset($_SESSION['obj']->k) ? $_SESSION['obj']->k + 1 : 0;
+		Router::render('test.php', ['obj' => $_SESSION['obj']]);
 	}
 }
