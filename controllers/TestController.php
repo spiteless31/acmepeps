@@ -29,9 +29,6 @@ final class TestController
 	 */
 	public static function test(): void
 	{
-		session_start();
-		$_SESSION['obj'] = $_SESSION['obj'] ?? new stdClass();
-		$_SESSION['obj']->k = isset($_SESSION['obj']->k) ? $_SESSION['obj']->k + 1 : 0;
-		Router::render('test.php', ['obj' => $_SESSION['obj']]);
+		
 	}
 }
