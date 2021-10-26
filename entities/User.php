@@ -71,7 +71,7 @@ class User extends ORMDB implements UserLoggable
 		if (!password_verify($this->pwd, $user->pwd))
 			return false;
 		// Inscrire l'utilisateur dans la session et retourner true.
-		$_SESSION['idUser'] = $this->idUser;
+		$_SESSION['idUser'] = $user->idUser;
 		return true;
 	}
 
