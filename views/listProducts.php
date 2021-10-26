@@ -19,7 +19,7 @@ use peps\core\Cfg;
 </head>
 
 <body>
-	<header></header>
+	<?php require 'views/inc/header.php' ?>
 	<main>
 		<?php
 		foreach ($categories as $category) {
