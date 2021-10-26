@@ -6,6 +6,7 @@ namespace entities;
 
 use peps\core\ORMDB;
 use peps\core\UserLoggable;
+use peps\core\Validator;
 
 /**
  * Entité User.

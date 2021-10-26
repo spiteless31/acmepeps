@@ -6,6 +6,7 @@ namespace controllers;
 
 use entities\Category;
 use entities\Product;
+use entities\User;
 use peps\core\Router;
 use stdClass;
 
