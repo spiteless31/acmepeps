@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace views;
-
 use peps\core\Cfg;
 ?>
 <!DOCTYPE html>
@@ -16,13 +14,13 @@ use peps\core\Cfg;
 </head>
 
 <body>
-	<?php require 'views/inc/header.php' ?>
+	<?php require_once 'inc/header.php' ?>
 	<main>
 		<div class="category">
 			<a href="/product/list">Produits</a> &gt; Editer
 		</div>
-		<div class="error"><?= implode('<br/>', $errors ?? []) ?></div>
-		<form name="form1" action="/product/save" method="POST">
+		<div class="error"><?= implode('<br />', $errors ?? []) ?></div>
+		<form name="form1" action="/product/save" method="POST" enctype="multipart/form-data">
 			<input type="hidden" name="idProduct" value="<?= $product->idProduct ?>" />
 			<div class="item">
 				<label>Catégorie</label>
@@ -50,13 +48,26 @@ use peps\core\Cfg;
 				<input type="number" name="price" value="<?= $product->price ? Cfg::get('NF_INPUT_2DEC')->format($product->price) : null ?>" min="0.01" max="9999.99" step="0.01" size="7" maxlength="7" required="required" />
 			</div>
 			<div class="item">
+				<label>Photo (JPEG)</label>
+				<input type="file" name="photo" onchange="displayPhoto(this.files)" accept="<?= join(',', Cfg::get('imgAllowedMimeTypes')) ?>" />
+				<input type="button" value="Parcourir..." onclick="this.form.photo.click()" />
+			</div>
+			<div class="item">
 				<label></label>
 				<a href="/product/list"><input type="button" value="Annuler" /></a>
 				<input type="submit" value="Valider" />
 			</div>
 		</form>
+		<div id="thumbnail">
+			<img src="/assets/img/product_<?= $product->idImg ?>_small.jpg?mtime=<?= $mtime ?>" />
+		</div>
 	</main>
 	<footer></footer>
+	<script>
+		const IMG_MAX_FILE_SIZE = <?= Cfg::get('imgMaxFileSize') ?>;
+		const IMG_ALLOWED_MIME_TYPES = <?= json_encode(Cfg::get('imgAllowedMimeTypes'), JSON_UNESCAPED_SLASHES) ?>;
+	</script>
+	<script src="/assets/js/editProduct.js"></script>
 </body>
 
 </html>

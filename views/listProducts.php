@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace views;
 
+use entities\User;
 use peps\core\Cfg;
 
 ?>
@@ -25,9 +26,15 @@ use peps\core\Cfg;
 		foreach ($categories as $category) {
 		?>
 			<div class="category">
-				<a href="/product/create/<?= $category->idCategory ?>">
-					<img class="ico" src="/assets/img/ico_create.svg" />
-				</a>
+				<?php
+				if (User::getUserSession()) {
+				?>
+					<a href="/product/create/<?= $category->idCategory ?>">
+						<img class="ico" src="/assets/img/ico_create.svg" />
+					</a>
+				<?php
+				}
+				?>
 				<?= $category->name ?>
 			</div>
 			<?php
@@ -40,11 +47,17 @@ use peps\core\Cfg;
 						<img class="thumbnail" src="/assets/img/product_<?= $product->idImg ?>_small.jpg" alt="<?= $product->name ?>" />
 						<div class="name"><?= $product->name ?></div>
 					</a>
-					<a class="ico update" href="/product/update/<?= $product->idProduct ?>">
-						<img src="/assets/img/ico_update.svg" />
-					</a>
-					<img src="/assets/img/ico_delete.svg" class="ico delete" onclick="deleteAll(<?= $product->idProduct ?>)" />
-					<img src="/assets/img/ico_deleteImg.svg" class="ico deleteImg" onclick="deleteImg(<?= $product->idProduct ?>)" />
+					<?php
+					if (User::getUserSession()) {
+					?>
+						<a class="ico update" href="/product/update/<?= $product->idProduct ?>">
+							<img src="/assets/img/ico_update.svg" />
+						</a>
+						<img class="ico delete" src="/assets/img/ico_delete.svg" onclick="deleteAll(<?= $product->idProduct ?>)" />
+						<img class="ico deleteImg" src="/assets/img/ico_deleteImg.svg" onclick="deleteImg(<?= $product->idProduct ?>)" />
+					<?php
+					}
+					?>
 				</div>
 		<?php
 			}
