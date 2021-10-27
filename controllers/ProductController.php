@@ -11,11 +11,6 @@ use Exception;
 use peps\core\Cfg;
 use peps\core\DBAL;
 use peps\core\Router;
-use peps\image\Image;
-use peps\image\ImageException;
-use peps\image\ImageJpeg;
-use peps\upload\Upload;
-use peps\upload\UploadException;
 use SplFileInfo;
 
 /**
@@ -41,6 +36,11 @@ final class ProductController
 	{
 		// Récupérer toutes les catégories.
 		$categories = Category::findAllBy([], ['name' => 'ASC']);
+		// Ajouter dynamiquement la propriété idImg pour chaque produit de chaque catégorie.
+		foreach ($categories as $category) {
+			foreach ($category->products as $product)
+				$product->idImg = file_exists("assets/img/product_{$product->idProduct}_big.jpg") ? $product->idProduct : 0;
+		}
 		// Rendre la vue.
 		Router::render('listProducts.php', ['categories' => $categories]);
 	}
@@ -74,9 +74,9 @@ final class ProductController
 	 */
 	public static function delete(array $params): void
 	{
-		// Si utilisateur non logué, ne pas aller plus loin.
+		// Si utilisateur non logué, rediriger vers le formulaire de connexion.
 		if (!User::getUserSession())
-			Router::json(json_encode(''));
+			Router::redirect('/user/signin');
 		// Récupérer idProduct et mode.
 		$idProduct = (int) $params['idProduct'];
 		$mode = $params['mode'];
@@ -85,12 +85,8 @@ final class ProductController
 		// Dans tous les cas, tenter de supprimer les images.
 		@unlink("assets/img/product_{$idProduct}_small.jpg");
 		@unlink("assets/img/product_{$idProduct}_big.jpg");
-		// SOLUTION SYNCHRONE
 		// Rediriger vers la liste.
-		//Router::redirect('/');
-		// SOLUTION ASYNCHRONE
-		// Faire un echo sans précision.
-		Router::json(json_encode(''));
+		Router::redirect('/');
 	}
 
 	/**
@@ -140,7 +136,7 @@ final class ProductController
 			Router::render('noProduct.php');
 		// Récupérer toutes les catégories.
 		$categories = Category::findAllBy([], ['name' => 'ASC']);
-		// Ajouter dynamiquement la propriété idImg et, le cas échéant, définir la date de mise à jour.
+		// Ajouter dynamiquement la propriété idImg et définir la date de mise à jour.
 		try {
 			$product->idImg = $product->idProduct;
 			$mtime = (new SplFileInfo("assets/img/product_{$product->idProduct}_small.jpg"))->getMTime();
@@ -168,9 +164,10 @@ final class ProductController
 		// Récupérer et filtrer les donnéees POST.
 		$product->idProduct = filter_input(INPUT_POST, 'idProduct', FILTER_VALIDATE_INT) ?: null;
 		$product->idCategory = filter_input(INPUT_POST, 'idCategory', FILTER_VALIDATE_INT) ?: null;
-		$product->name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?: null;
+		$product->name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING) ?: null;
 		$product->ref = filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_STRING) ?: null;
 		$product->price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT) ?: null;
+		/*
 		// Si données valides, traiter l'upload et redimensionner.
 		if ($product->validate($errors)) {
 			// Créer un booléen pour retenir si update ou pas.
@@ -207,7 +204,7 @@ final class ProductController
 		}
 		// Récupérer toutes les catégories pour peupler le menu déroulant.
 		$categories = Category::findAllBy([], ['name' => 'ASC']);
-		// Ajouter dynamiquement la propriété idImg et, le cas échéant, définir la date de mise à jour.
+		// Ajouter dynamiquement la propriété idImg et définir la date de mise à jour.
 		try {
 			$product->idImg = $product->idProduct;
 			$mtime = (new SplFileInfo("assets/img/product_{$product->idProduct}_small.jpg"))->getMTime();
@@ -216,5 +213,6 @@ final class ProductController
 		}
 		// Rendre à nouveau la vue du formulaire.
 		Router::render('editProduct.php', ['product' => $product, 'categories' => $categories, 'mtime' => $mtime, 'errors' => $errors]);
+*/
 	}
 }

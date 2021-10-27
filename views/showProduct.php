@@ -25,7 +25,7 @@ use peps\core\Cfg;
 			<a href="/">Produits</a> &gt; <?= $product->name ?>
 		</div>
 		<div id="detailProduct">
-			<img src="/assets/img/product_<?= $product->idImg ?>_big.jpg" alt="<?= $product->name ?>" />
+			<img src="/assets/img/product_<?= $product->idImg ?>_big.jpg?mtime=<?= $mtime ?>" alt="<?= $product->name ?>" />
 			<div>
 				<div class="price"><?= Cfg::get('NF_LOCALE_2DEC')->format($product->price) ?></div>
 				<div class="category">catégorie<br />

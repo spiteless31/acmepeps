@@ -59,7 +59,7 @@ use peps\core\Cfg;
 			</div>
 		</form>
 		<div id="thumbnail">
-			<img src="/assets/img/product_<?= $product->idImg ?>_small.jpg?mtime=<?= $mtime ?>" />
+			<img src="/assets/img/product_<?= $product->idImg ?>_small.jpg?mtime=<?= $mtime ?>" alt="<?= $product->name ?>" />
 		</div>
 	</main>
 	<footer></footer>

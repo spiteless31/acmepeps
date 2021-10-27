@@ -30,7 +30,7 @@ use peps\core\Cfg;
 				if (User::getUserSession()) {
 				?>
 					<a href="/product/create/<?= $category->idCategory ?>">
-						<img class="ico" src="/assets/img/ico_create.svg" />
+						<img class="ico" src="/assets/img/ico_create.svg" alt="Add a product in this category" />
 					</a>
 				<?php
 				}
@@ -39,8 +39,6 @@ use peps\core\Cfg;
 			</div>
 			<?php
 			foreach ($category->products as $product) {
-				// Ajouter dynamiquement la propriété idImg.
-				$product->idImg = file_exists("assets/img/product_{$product->idProduct}_small.jpg") ? $product->idProduct : 0;
 			?>
 				<div class="blockProduct">
 					<a href="/product/show/<?= $product->idProduct ?>">
@@ -51,10 +49,10 @@ use peps\core\Cfg;
 					if (User::getUserSession()) {
 					?>
 						<a class="ico update" href="/product/update/<?= $product->idProduct ?>">
-							<img src="/assets/img/ico_update.svg" />
+							<img src="/assets/img/ico_update.svg" alt="Edit the product" />
 						</a>
-						<img class="ico delete" src="/assets/img/ico_delete.svg" onclick="deleteAll(<?= $product->idProduct ?>)" />
-						<img class="ico deleteImg" src="/assets/img/ico_deleteImg.svg" onclick="deleteImg(<?= $product->idProduct ?>)" />
+						<img class="ico delete" src="/assets/img/ico_delete.svg" onclick="deleteAll(<?= $product->idProduct ?>)" alt="Delete the product" />
+						<img class="ico deleteImg" src="/assets/img/ico_deleteImg.svg" onclick="deleteImg(<?= $product->idProduct ?>)" alt="Delete the image" />
 					<?php
 					}
 					?>
