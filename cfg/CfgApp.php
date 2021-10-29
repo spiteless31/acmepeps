@@ -22,7 +22,7 @@ class CfgApp extends Cfg
 	 * @var string[]
 	 */
 	public const HOSTS = [
-		'acmepeps' => CfgLocal::class
+		'gitacmepeps' => CfgLocal::class
 	];
 
 	/**
