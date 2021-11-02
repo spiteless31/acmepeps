@@ -38,6 +38,11 @@ use peps\core\Cfg;
 				<label></label>
 				<input type="submit" value="Connexion" />
 			</div>
+			<div class="item">
+		    <label></label>
+			<a href="/user/forgottenPwd">mot de passe oublié</a>
+
+			</div>
 		</form>
 	</main>
 	<footer></footer>

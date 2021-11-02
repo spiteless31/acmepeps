@@ -33,6 +33,12 @@ class User extends ORMDB implements UserLoggable
 	 */
 	public ?string $pwd = null;
 
+	public ?string $pwdHash = null;
+
+	public ?string $pwdTimeout = null;
+
+	public ?string $email = null;
+
 	/**
 	 * Nom.
 	 */

@@ -16,23 +16,30 @@ use peps\core\Cfg;
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?= Cfg::get('appTitle') ?></title>
 	<link rel="stylesheet" href="/assets/css/acme.css" />
-	<style>
-		#englobe{
-			border: 2px solid red;
-		}
-	</style>
 </head>
 
 <body>
 	<?php require 'views/inc/header.php' ?>
+	
+	
 	<main>
+		<form action="/user/savePwd" method="POST">
+		<input type="hidden" name="hash" value="<?= $hash ?>"/>
 		<div class="category">
-			<input id="autocomplete" oninput="test()" />
-			<div id="autocomplete_results"></div>
+			<a href="/">Accueil</a> &gt; nouveau mot de passe
 		</div>
-	</main>
+        <div class="error">
+            <?= implode('<br>',$errors??[]) ?>
+        </div>
+	
+    <div class="item">
+<label> Mot de passe</label>
+<input name="pwd" type="password" value="" required="required">
+
+<input type="submit" value="envoyer">
+</div>
+    </form>
 	<footer></footer>
-	<script src="/assets/js/test.js"></script>
 </body>
 
 </html>

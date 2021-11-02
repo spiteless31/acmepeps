@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace controllers;
 
+use DateTime;
 use entities\User;
+use peps\core\DBAL;
+use peps\core\ORMDB;
 use peps\core\Router;
 
 /**
@@ -17,6 +20,8 @@ final class UserController
 {
 	// Messages d'erreur.
 	private const ERR_LOGIN = "Identifiant ou mot de passe absents ou invalides";
+	private const ERR_INVALID_LOG = "Identifiant  absents ou invalides";
+	private const ERR_INVALID_HASH = "lien invalide ou expiré";
 
 	/**
 	 * Constructeur privé.
@@ -68,6 +73,87 @@ final class UserController
 		// Détruire la session.
 		session_destroy();
 		// Rediriger vers l'accueil.
+		Router::redirect('/');
+	}
+
+	//affiche la vue mot de passe oublié
+	public static function forgottenPwd(): void
+	{
+		Router::render("forgottenPwd.php", ['log' => null]);
+	}
+
+	public static function newPwd(): void
+	{
+
+		$errors = [];
+
+
+		$log = filter_input(INPUT_POST, 'log', FILTER_SANITIZE_STRING) ?: null;
+
+		if (!$user = User::findOneBy(['log' => $log])) {
+			$errors[] = self::ERR_INVALID_LOG;
+			Router::render("forgottenPwd.php", ['log' =>  $log, 'errors' =>  $errors]);
+		}
+
+
+
+
+		$hash = hash('sha1', microtime(), false);
+		$user->pwdHash = $hash;
+		$user->pwdTimeout = date('Y-m-d H:i:s', time() + 10 * 60);
+		$user->persist();
+
+		$subject = 'renouvellement du mot de passe';
+		$link = "bonjour,
+cliquez sur le lien ci-dessous pour reinitialiser votre mot de passe.
+Ce lien sera expiré dans 10min
+http://gitacmepeps/user/setPwd/{$hash}
+";
+		mail($user->email, $subject, $link);
+
+		router::redirect('/');
+	}
+	/**
+	 * 
+	 * 
+	 *
+	 * @param array $params
+	 * @return void
+	 */
+	public static function setPwd(array $params): void
+	{
+
+		$hash = $params['hash'];
+		var_dump($hash);
+		if (!$hash || !($user = User::findOneBy(['pwdHash' => $hash])) || $user->pwdTimeout < date('Y-m-d H:i:s')) {
+			$errors[] = self::ERR_INVALID_HASH;
+			Router::render("forgottenPwd.php", ['log' =>  null, 'errors' =>  $errors]);
+		}
+		Router::render('setPwd.php', ['hash' => $hash]);
+	}
+	public static function savePwd(): void
+	{
+		$hash = filter_input(INPUT_POST, 'hash', FILTER_SANITIZE_STRING) ?: null;
+		$pwd = filter_input(INPUT_POST, 'pwd', FILTER_SANITIZE_STRING) ?: null;
+		
+
+		if (!$pwd || !$hash || !($user = User::findOneBy(['pwdHash' => $hash])) || $user->pwdTimeout < date('Y-m-d H:i:s')) {
+			$errors[] = self::ERR_INVALID_HASH;
+			Router::render("forgottenPwd.php", ['log' =>  null, 'errors' =>  $errors]);
+		}
+
+		$user->pwd = password_hash($pwd, PASSWORD_DEFAULT);
+		$user->pwdHash = null;
+		$user->pwdTimeout = null;
+
+		$user->persist();
+		$_SESSION['idUser'] = $user->idUser;
+
+		$subject = 'changement reussi de votre mot de passe';
+		$link = "bonjour,
+votre mot de passe vient d'etre modifié
+";
+		mail($user->email, $subject, $link);
 		Router::redirect('/');
 	}
 }

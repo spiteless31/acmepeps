@@ -68,10 +68,40 @@
     },
     {
         "verb": "GET",
-        "uri": "/testy/autocomplete/(.+)",
+        "uri": "/testy/autocomplete/(.*)",
         "method": "TestController.autocomplete",
         "params": [
             "value"
         ]
+    },
+    {
+        "verb": "GET",
+        "uri": "/user/forgottenPwd",
+        "method": "UserController.forgottenPwd"
+
+    },
+    {
+        "verb": "POST",
+        "uri": "/user/newPwd",
+        "method": "UserController.newPwd"
+
+
+
+    },
+    {
+        "verb": "GET",
+        "uri": "/user/setPwd/([a-f0-9]+)",
+        "method": "UserController.setPwd",
+        "params": [
+            "hash"
+        ]
+
+    },
+    {
+        "verb": "POST",
+        "uri": "/user/savePwd",
+        "method": "UserController.savePwd"
+
+
     }
 ]

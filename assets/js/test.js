@@ -5,11 +5,14 @@ function test() {
         .then(response => response.json())
         .then(products => {
             console.log(products);
+            let englobe = document.createElement('div');
+            englobe.id = "englobe"
             autocomplete_results.innerHTML = '';
             products.forEach(product => {
                 let p = document.createElement('p');
                 p.textContent = `${product.name} (${product.ref}) ${product.price} €`;
-                autocomplete_results.appendChild(p);
+                englobe.appendChild(p);
+                autocomplete_results.appendChild(englobe);
             });
         });
 }
